@@ -517,12 +517,6 @@
     line-height: 1.4;
     margin-top: -4px;
   }
-  #add-notes::placeholder, #edit-notes::placeholder,
-  #add-name::placeholder, #edit-name::placeholder {
-    color: #c8c4bc;
-    font-style: italic;
-  }
-
   .card-footer {
     display: flex;
     align-items: center;
@@ -773,9 +767,8 @@
     border-color: var(--ink);
   }
 
-  /* ── EDIT / ADD MODAL — two-column: photo left, fields right (mirrors Surfaces) ── */
-  .edit-modal-overlay,
-  .add-modal-overlay {
+  /* ── EDIT MODAL — two-column: photo left, fields right (mirrors Surfaces) ── */
+  .edit-modal-overlay {
     display: none;
     position: fixed;
     inset: 0;
@@ -785,8 +778,7 @@
     justify-content: center;
     padding: 20px;
   }
-  .edit-modal-overlay.open,
-  .add-modal-overlay.open { display: flex; }
+  .edit-modal-overlay.open { display: flex; }
 
   .edit-id {
     font-family: 'DM Mono', monospace;
@@ -832,8 +824,7 @@
     margin-bottom: 6px;
     display: block;
   }
-  .edit-photo-area,
-  .add-photo-area {
+  .edit-photo-area {
     position: relative;
     cursor: pointer;
     border-radius: 8px;
@@ -847,20 +838,16 @@
     justify-content: center;
     transition: border-color 0.15s, background 0.15s;
   }
-  .edit-photo-area:hover,
-  .add-photo-area:hover { border-color: var(--ink); }
-  .edit-photo-area.has-photo,
-  .add-photo-area.has-photo {
+  .edit-photo-area:hover { border-color: var(--ink); }
+  .edit-photo-area.has-photo {
     border-style: solid;
     border-color: var(--ink-faint);
     background: transparent;
   }
-  .edit-photo-area input[type="file"],
-  .add-photo-area input[type="file"] {
+  .edit-photo-area input[type="file"] {
     position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; z-index: 2;
   }
-  .edit-photo-preview,
-  .add-photo-preview {
+  .edit-photo-preview {
     width: 100%;
     height: auto;
     max-height: none;
@@ -870,8 +857,7 @@
     position: relative;
     z-index: 0;
   }
-  .edit-photo-placeholder,
-  .add-photo-placeholder {
+  .edit-photo-placeholder {
     color: var(--ink-faint);
     font-size: 11px;
     letter-spacing: 0.02em;
@@ -879,8 +865,7 @@
     pointer-events: none;
     padding: 24px;
   }
-  .edit-photo-placeholder svg,
-  .add-photo-placeholder svg { display: block; margin: 0 auto 8px; opacity: 0.4; }
+  .edit-photo-placeholder svg { display: block; margin: 0 auto 8px; opacity: 0.4; }
   .modal-photo-hover {
     position: absolute;
     inset: 0;
@@ -893,8 +878,7 @@
     pointer-events: none;
     z-index: 1;
   }
-  .edit-photo-area.has-photo:hover .modal-photo-hover,
-  .add-photo-area.has-photo:hover .modal-photo-hover { opacity: 1; }
+  .edit-photo-area.has-photo:hover .modal-photo-hover { opacity: 1; }
   .modal-photo-hover span {
     font-size: 10px;
     color: #fff;
@@ -921,7 +905,7 @@
     color: var(--ink-soft);
   }
 
-  /* ── ADD APRON BUTTON (Save / Add Item) ── */
+  /* ── SAVE BUTTON (header, appears when edits are pending) ── */
   .save-btn {
     display: flex;
     align-items: center;
@@ -1027,34 +1011,13 @@
   .broken-check-box:hover { border-color: var(--ink); color: var(--ink-soft); }
   .broken-check-input:checked ~ .broken-check-box:hover { background: var(--ink); color: #fff; }
 
-  /* Hide spinners on qty inputs */
+  /* Hide spinners on qty input */
   #edit-qty::-webkit-inner-spin-button,
-  #edit-qty::-webkit-outer-spin-button,
-  #add-qty::-webkit-inner-spin-button,
-  #add-qty::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-  #edit-qty, #add-qty { -moz-appearance: textfield; appearance: textfield; }
+  #edit-qty::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  #edit-qty { -moz-appearance: textfield; appearance: textfield; }
 
-  .add-vessel-btn {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--ink);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius);
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    padding: 7px 12px;
-    cursor: pointer;
-    letter-spacing: 0.03em;
-    transition: opacity 0.15s;
-    white-space: nowrap;
-  }
-  .add-vessel-btn:hover { opacity: 0.82; }
-  .add-vessel-btn svg { flex-shrink: 0; }
-
-  /* Shared modal container (both Add and Edit use .add-modal) */
-  .add-modal {
+  /* Edit modal container */
+  .edit-modal {
     background: var(--surface);
     border-radius: 12px;
     width: 860px;
@@ -1064,14 +1027,14 @@
     overflow: hidden;
   }
 
-  .add-modal-footer {
+  .edit-modal-footer {
     display: flex;
     gap: 10px;
     justify-content: flex-end;
     margin-top: auto;
     padding-top: 4px;
   }
-  .add-cancel-btn {
+  .edit-cancel-btn {
     font-family: 'DM Mono', monospace;
     font-size: 11px;
     padding: 8px 16px;
@@ -1082,8 +1045,8 @@
     cursor: pointer;
     transition: border-color 0.15s;
   }
-  .add-cancel-btn:hover { border-color: var(--ink); color: var(--ink); }
-  .add-confirm-btn {
+  .edit-cancel-btn:hover { border-color: var(--ink); color: var(--ink); }
+  .edit-confirm-btn {
     font-family: 'DM Mono', monospace;
     font-size: 11px;
     padding: 8px 18px;
@@ -1094,15 +1057,7 @@
     cursor: pointer;
     transition: opacity 0.15s;
   }
-  .add-confirm-btn:hover { opacity: 0.82; }
-  .add-generated-id {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: var(--ink-soft);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  .add-generated-id span { color: var(--ink); font-weight: 600; }
+  .edit-confirm-btn:hover { opacity: 0.82; }
 
   /* Mobile: stack photo above fields, same breakpoint as the rest of the shell */
   @media (max-width: 720px) {
@@ -1200,10 +1155,6 @@
           <option value="default">Sort: Default</option>
           <option value="id">ID A–Z</option>
         </select>
-        <button class="add-vessel-btn" id="add-item-btn" onclick="openAddModal()" style="display:none">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Add Item
-        </button>
         <button class="save-btn" id="save-btn" onclick="saveFile()" style="display:none">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Save
@@ -1230,10 +1181,6 @@
 const COLOR_SWATCHES = {
   'Blue': '#42A5F5', 'Yellow': '#FFC107', 'Red': '#D94040', 'Pink': '#F06292',
   'Green': '#4CAF50', 'Gray': '#9E9E9E', 'Black': '#2B2B2B', 'Beige/Brown': '#BCAAA4'
-};
-const COLOR_PREFIX = {
-  'Blue':'bl', 'Yellow':'y', 'Red':'r', 'Pink':'p',
-  'Green':'g', 'Gray':'gy', 'Black':'bk', 'Beige/Brown':'bb'
 };
 
 // ─────────────────────────────────────────────
@@ -1347,9 +1294,6 @@ function render() {
   const empty  = document.getElementById('empty');
   const count  = document.getElementById('results-count');
   const colorHeaderText = document.getElementById('color-header-text');
-  const addBtn = document.getElementById('add-item-btn');
-
-  addBtn.style.display = state.color ? 'flex' : 'none';
 
   // No color selected — build and show landing page
   const banner = document.getElementById('landing-banner');
@@ -1613,7 +1557,7 @@ render();
 
 <!-- EDIT ITEM MODAL -->
 <div class="edit-modal-overlay" id="edit-modal-overlay">
-  <div class="add-modal">
+  <div class="edit-modal">
     <div class="em-header">
       <span class="em-title">Edit Item</span>
       <span class="edit-id" id="edit-modal-id"></span>
@@ -1671,78 +1615,9 @@ render();
           </div>
         </div>
 
-        <div class="add-modal-footer">
-          <button class="add-cancel-btn" onclick="closeEditModal()">Cancel</button>
-          <button class="add-confirm-btn" onclick="saveAndExport()">Save Changes</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ADD ITEM MODAL -->
-<div class="add-modal-overlay" id="add-modal-overlay">
-  <div class="add-modal">
-    <div class="em-header">
-      <span class="em-title">Add New Item</span>
-      <span id="add-generated-id" class="add-generated-id"></span>
-    </div>
-    <div class="modal-inner">
-      <!-- LEFT: photo -->
-      <div class="modal-photo-col">
-        <span class="modal-photo-label">Photo</span>
-        <div class="add-photo-area" id="add-photo-area">
-          <input type="file" id="add-photo-input" accept="image/*">
-          <div class="add-photo-placeholder" id="add-photo-placeholder">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M3 9l4-4 3 3 4-4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-            Click or drag to upload photo
-          </div>
-          <img id="add-photo-preview" class="add-photo-preview" style="display:none">
-          <div class="modal-photo-hover"><span>Replace photo</span></div>
-        </div>
-      </div>
-      <!-- RIGHT: fields -->
-      <div class="modal-fields-col">
-        <div class="mf">
-          <label>Name / Visual Description</label>
-          <textarea id="add-name" rows="1" placeholder="e.g. Solid Navy Linen Apron, Crossback Straps, Two Patch Pockets"></textarea>
-        </div>
-
-        <div class="mf">
-          <label>Color</label>
-          <select id="add-color">
-            <option value="Blue">Blue</option>
-            <option value="Yellow">Yellow</option>
-            <option value="Red">Red</option>
-            <option value="Pink">Pink</option>
-            <option value="Green">Green</option>
-            <option value="Gray">Gray</option>
-            <option value="Black">Black</option>
-            <option value="Beige/Brown">Beige / Brown</option>
-          </select>
-        </div>
-
-        <div class="em-row3">
-          <div class="mf">
-            <label>Qty</label>
-            <input type="number" id="add-qty" placeholder="1" step="1" min="1" value="1">
-          </div>
-          <label class="broken-check-wrap">
-            <span class="broken-field-label">Archive</span>
-            <input type="checkbox" id="add-archive" class="broken-check-input">
-            <div class="broken-check-box">
-              <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="3" x2="13" y2="13"/><line x1="13" y1="3" x2="3" y2="13"/></svg>
-            </div>
-          </label>
-          <div class="mf">
-            <label>Notes</label>
-            <input type="text" id="add-notes" placeholder="e.g. Fragile, handle with care">
-          </div>
-        </div>
-
-        <div class="add-modal-footer">
-          <button class="add-cancel-btn" id="add-cancel-btn" onclick="closeAddModal()">Cancel</button>
-          <button class="add-confirm-btn" id="add-confirm-btn" onclick="addToCatalog()">Add to Catalog</button>
+        <div class="edit-modal-footer">
+          <button class="edit-cancel-btn" onclick="closeEditModal()">Cancel</button>
+          <button class="edit-confirm-btn" onclick="saveAndExport()">Save Changes</button>
         </div>
       </div>
     </div>
@@ -1970,105 +1845,6 @@ function autoGrow(el) {
         preview.style.display = 'block';
         document.getElementById('edit-photo-placeholder').style.display = 'none';
         document.getElementById('edit-photo-area').classList.add('has-photo');
-      };
-      img.src = ev.target.result;
-    };
-    reader.readAsDataURL(file);
-  });
-})();
-
-// ─────────────────────────────────────────────
-//  ADD MODAL
-// ─────────────────────────────────────────────
-let addPendingImageB64 = null;
-
-function getNextId(color) {
-  const cp = COLOR_PREFIX[color] || 'x';
-  const prefix = cp + '-';
-  const nums = aprons
-    .filter(v => v.id && v.id.startsWith(prefix))
-    .map(v => parseInt(v.id.replace(prefix, ''), 10))
-    .filter(n => !isNaN(n));
-  const next = nums.length ? Math.max.apply(null, nums) + 1 : 1;
-  return prefix + next;
-}
-
-function updateGeneratedId() {
-  const color = document.getElementById('add-color').value;
-  const id = getNextId(color);
-  document.getElementById('add-generated-id').innerHTML = `ID: <span>${id.toUpperCase()}</span>`;
-}
-
-function openAddModal() {
-  if (!state.color) return;
-  addPendingImageB64 = null;
-  document.getElementById('add-photo-input').value = '';
-  document.getElementById('add-photo-preview').style.display = 'none';
-  document.getElementById('add-photo-placeholder').style.display = 'block';
-  document.getElementById('add-photo-area').classList.remove('has-photo');
-  document.getElementById('add-name').value = '';
-  document.getElementById('add-color').value = state.color;
-  document.getElementById('add-qty').value = 1;
-  document.getElementById('add-notes').value = '';
-  document.getElementById('add-archive').checked = false;
-  updateGeneratedId();
-  document.getElementById('add-modal-overlay').classList.add('open');
-}
-
-function closeAddModal() {
-  document.getElementById('add-modal-overlay').classList.remove('open');
-}
-
-function addToCatalog() {
-  const name = document.getElementById('add-name').value.trim();
-  if (!name) { alert('Please enter a name / visual description.'); return; }
-
-  const color = document.getElementById('add-color').value;
-  const id = getNextId(color);
-
-  const item = { id, color, name };
-
-  const qty = parseInt(document.getElementById('add-qty').value);
-  if (!isNaN(qty) && qty > 0) item.qty = qty;
-
-  const notes = document.getElementById('add-notes').value.trim();
-  if (notes) item.notes = notes;
-
-  if (document.getElementById('add-archive').checked) item.archive = true;
-
-  aprons.push(item);
-  if (addPendingImageB64) IMAGES[id] = addPendingImageB64;
-
-  markDirty();
-  closeAddModal();
-  render();
-}
-
-document.getElementById('add-modal-overlay').addEventListener('click', function(e) {
-  if (e.target === this) closeAddModal();
-});
-document.getElementById('add-color').addEventListener('change', updateGeneratedId);
-document.getElementById('add-name').addEventListener('input', function() { autoGrow(this); });
-
-(function() {
-  document.getElementById('add-photo-input').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(ev) {
-      const img = new Image();
-      img.onload = function() {
-        const canvas = document.createElement('canvas');
-        let w = img.width, h = img.height;
-        if (w > 800) { h = Math.round(h * 800 / w); w = 800; }
-        canvas.width = w; canvas.height = h;
-        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-        addPendingImageB64 = canvas.toDataURL('image/jpeg', 0.9);
-        const preview = document.getElementById('add-photo-preview');
-        preview.src = addPendingImageB64;
-        preview.style.display = 'block';
-        document.getElementById('add-photo-placeholder').style.display = 'none';
-        document.getElementById('add-photo-area').classList.add('has-photo');
       };
       img.src = ev.target.result;
     };
