@@ -368,9 +368,12 @@
   }
 
   /* ── GRID ── */
+  /* Aprons is a much smaller collection than Vessels/Napkins/Surfaces, so
+     narrower columns are fine — cards run taller (2:3) to match the
+     portrait shape of every apron photo. */
   #grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(180px, 220px));
     gap: 16px;
   }
 
@@ -399,7 +402,7 @@
 
   .card-img {
     width: 100%;
-    aspect-ratio: 4/3;
+    aspect-ratio: 2/3;
     background: #F0EDE8;
     display: flex;
     align-items: center;
@@ -770,54 +773,153 @@
     border-color: var(--ink);
   }
 
-  /* ── EDIT MODAL ── */
-  .edit-modal-overlay {
+  /* ── EDIT / ADD MODAL — two-column: photo left, fields right (mirrors Surfaces) ── */
+  .edit-modal-overlay,
+  .add-modal-overlay {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.3);
+    background: rgba(0,0,0,0.45);
     z-index: 1000;
     align-items: center;
     justify-content: center;
     padding: 20px;
   }
-  .edit-modal-overlay.open { display: flex; }
+  .edit-modal-overlay.open,
+  .add-modal-overlay.open { display: flex; }
 
   .edit-id {
+    font-family: 'DM Mono', monospace;
     font-size: 10px;
     color: var(--ink-soft);
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
-  .edit-photo-area {
-    border: 2px dashed var(--tag-border);
-    border-radius: 8px;
-    padding: 16px;
-    text-align: center;
-    cursor: pointer;
-    transition: border-color 0.15s, background 0.15s;
+
+  /* Header above both columns */
+  .em-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 28px 28px 16px;
+  }
+  .em-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--ink);
+  }
+
+  /* Two-column body */
+  .modal-inner {
+    display: flex;
+    align-items: stretch;
+  }
+
+  /* Photo column */
+  .modal-photo-col {
+    width: 300px;
+    flex-shrink: 0;
+    padding: 0 16px 28px 28px;
+    display: flex;
+    flex-direction: column;
+  }
+  .modal-photo-label {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+    display: block;
+  }
+  .edit-photo-area,
+  .add-photo-area {
     position: relative;
-    margin-bottom: 14px;
+    cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--bg);
+    border: 2px dashed var(--tag-border);
+    min-height: 200px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.15s, background 0.15s;
   }
-  .edit-photo-area:hover { border-color: var(--ink); background: var(--bg); }
-  .edit-photo-area.has-photo { border-style: solid; border-color: var(--ink-faint); padding: 0; overflow: hidden; }
-  .edit-photo-area input[type="file"] {
-    position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+  .edit-photo-area:hover,
+  .add-photo-area:hover { border-color: var(--ink); }
+  .edit-photo-area.has-photo,
+  .add-photo-area.has-photo {
+    border-style: solid;
+    border-color: var(--ink-faint);
+    background: transparent;
   }
-  .edit-photo-preview {
+  .edit-photo-area input[type="file"],
+  .add-photo-area input[type="file"] {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; z-index: 2;
+  }
+  .edit-photo-preview,
+  .add-photo-preview {
     width: 100%;
     height: auto;
     max-height: none;
     object-fit: cover;
     display: block;
     border-radius: 6px;
+    position: relative;
+    z-index: 0;
   }
-  .edit-photo-placeholder {
-    color: var(--ink-soft);
+  .edit-photo-placeholder,
+  .add-photo-placeholder {
+    color: var(--ink-faint);
     font-size: 11px;
+    letter-spacing: 0.02em;
+    text-align: center;
     pointer-events: none;
+    padding: 24px;
   }
-  .edit-photo-placeholder svg { display: block; margin: 0 auto 6px; opacity: 0.4; }
+  .edit-photo-placeholder svg,
+  .add-photo-placeholder svg { display: block; margin: 0 auto 8px; opacity: 0.4; }
+  .modal-photo-hover {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.15s;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .edit-photo-area.has-photo:hover .modal-photo-hover,
+  .add-photo-area.has-photo:hover .modal-photo-hover { opacity: 1; }
+  .modal-photo-hover span {
+    font-size: 10px;
+    color: #fff;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* Fields column */
+  .modal-fields-col {
+    flex: 1;
+    padding: 0 28px 28px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+    overflow-y: auto;
+    max-height: calc(90vh - 54px);
+  }
+  .mf { display: flex; flex-direction: column; gap: 4px; }
+  .mf label {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
 
   /* ── ADD APRON BUTTON (Save / Add Item) ── */
   .save-btn {
@@ -839,22 +941,60 @@
     border-color: var(--ink);
   }
 
-  /* ── MODAL SHARED FIELD LAYOUTS ── */
-  .modal-qty-notes-row {
-    display: grid;
-    grid-template-columns: calc(25% - 7.5px) calc(25% - 7.5px) auto;
-    gap: 10px;
-    margin-top: 10px;
-    margin-bottom: 14px;
+  /* Field inputs (shared by both modals via .mf) */
+  .mf input,
+  .mf select,
+  .mf textarea {
+    width: 100%;
+    box-sizing: border-box;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    padding: 8px 10px;
+    border: 1.5px solid var(--tag-border);
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.15s;
   }
-  .modal-qty-field,
-  .modal-notes-field { margin-bottom: 0 !important; }
+  .mf textarea {
+    resize: none;
+    overflow: hidden;
+    min-height: 36px;
+    line-height: 1.5;
+    display: block;
+  }
+  .mf select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 9px center;
+    background-size: 8px;
+    padding-right: 28px;
+    cursor: pointer;
+  }
+  .mf input:focus,
+  .mf select:focus,
+  .mf textarea:focus { border-color: var(--ink); }
+  .mf input::placeholder,
+  .mf textarea::placeholder { color: #c8c4bc; font-style: italic; }
+
+  /* Row: Qty + Archive + Notes */
+  .em-row3 {
+    display: grid;
+    grid-template-columns: 64px 64px 1fr;
+    gap: 8px;
+    align-items: end;
+  }
 
   /* ── ARCHIVE TOGGLE (in modals) ── */
   .broken-check-wrap {
     display: flex;
     flex-direction: column;
-    margin-bottom: 0;
+    gap: 4px;
+    cursor: pointer;
+    user-select: none;
   }
   .broken-field-label {
     display: block;
@@ -862,7 +1002,6 @@
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--ink-soft);
-    margin-bottom: 6px;
     font-family: 'DM Mono', monospace;
   }
   .broken-check-input { display: none; }
@@ -895,25 +1034,6 @@
   #add-qty::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
   #edit-qty, #add-qty { -moz-appearance: textfield; appearance: textfield; }
 
-  /* Photo area — natural aspect ratio once image loaded */
-  .add-photo-area.has-photo,
-  .edit-photo-area.has-photo {
-    aspect-ratio: unset;
-    padding: 0;
-    border-style: solid;
-    border-color: var(--ink-faint);
-    overflow: hidden;
-  }
-  .add-photo-preview,
-  .edit-photo-preview {
-    width: 100%;
-    height: auto;
-    max-height: none;
-    object-fit: cover;
-    display: block;
-    border-radius: 6px;
-  }
-
   .add-vessel-btn {
     display: flex;
     align-items: center;
@@ -933,126 +1053,23 @@
   .add-vessel-btn:hover { opacity: 0.82; }
   .add-vessel-btn svg { flex-shrink: 0; }
 
-  /* ── ADD ITEM MODAL ── */
-  .add-modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.45);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  .add-modal-overlay.open { display: flex; }
+  /* Shared modal container (both Add and Edit use .add-modal) */
   .add-modal {
     background: var(--surface);
     border-radius: 12px;
-    padding: 28px 28px 24px;
-    width: 480px;
-    max-width: 95vw;
-    max-height: 90vh;
-    overflow-y: auto;
+    width: 860px;
+    max-width: 96vw;
     box-shadow: 0 8px 32px rgba(0,0,0,0.18);
     font-family: 'DM Mono', monospace;
-  }
-  .add-modal h3 {
-    font-family: 'Syne', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    margin: 0 0 20px;
-    color: var(--ink);
-  }
-  .add-modal-section {
-    margin-bottom: 18px;
-  }
-  .add-modal-section label {
-    display: block;
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    margin-bottom: 6px;
-  }
-  .add-modal-section input[type="text"],
-  .add-modal-section input[type="number"] {
-    width: 100%;
-    box-sizing: border-box;
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    padding: 8px 10px;
-    border: 1.5px solid var(--tag-border);
-    border-radius: var(--radius);
-    background: var(--bg);
-    color: var(--ink);
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  .add-modal-section textarea {
-    width: 100%;
-    box-sizing: border-box;
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    padding: 8px 10px;
-    border: 1.5px solid var(--tag-border);
-    border-radius: var(--radius);
-    background: var(--bg);
-    color: var(--ink);
-    outline: none;
-    transition: border-color 0.15s;
-    resize: none;
     overflow: hidden;
-    min-height: 36px;
-    line-height: 1.5;
-    display: block;
   }
-  .add-modal-section textarea:focus { border-color: var(--ink); }
-  .add-modal-section select {
-    width: 100%;
-    box-sizing: border-box;
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    padding: 8px 28px 8px 10px;
-    border: 1.5px solid var(--tag-border);
-    border-radius: var(--radius);
-    background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E") no-repeat right 9px center;
-    background-size: 8px;
-    color: var(--ink);
-    outline: none;
-    transition: border-color 0.15s;
-    appearance: none;
-    -webkit-appearance: none;
-    cursor: pointer;
-  }
-  .add-modal-section input:focus,
-  .add-modal-section select:focus {
-    border-color: var(--ink);
-  }
-  .add-photo-area {
-    border: 2px dashed var(--tag-border);
-    border-radius: 8px;
-    padding: 20px;
-    text-align: center;
-    cursor: pointer;
-    transition: border-color 0.15s, background 0.15s;
-    position: relative;
-  }
-  .add-photo-area:hover { border-color: var(--ink); background: var(--bg); }
-  .add-photo-area.has-photo { border-style: solid; border-color: var(--ink-faint); padding: 0; overflow: hidden; border-radius: 8px; }
-  .add-photo-area input[type="file"] {
-    position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
-  }
-  .add-photo-placeholder {
-    color: var(--ink-soft);
-    font-size: 11px;
-    pointer-events: none;
-  }
-  .add-photo-placeholder svg { display: block; margin: 0 auto 8px; opacity: 0.4; }
+
   .add-modal-footer {
     display: flex;
     gap: 10px;
-    margin-top: 22px;
     justify-content: flex-end;
+    margin-top: auto;
+    padding-top: 4px;
   }
   .add-cancel-btn {
     font-family: 'DM Mono', monospace;
@@ -1079,12 +1096,20 @@
   }
   .add-confirm-btn:hover { opacity: 0.82; }
   .add-generated-id {
+    font-family: 'DM Mono', monospace;
     font-size: 10px;
     color: var(--ink-soft);
-    margin-top: 6px;
-    min-height: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
   .add-generated-id span { color: var(--ink); font-weight: 600; }
+
+  /* Mobile: stack photo above fields, same breakpoint as the rest of the shell */
+  @media (max-width: 720px) {
+    .modal-inner { flex-direction: column; }
+    .modal-photo-col { width: 100%; min-height: 180px; padding: 0 28px 20px; }
+    .modal-fields-col { padding: 0 28px 28px; max-height: none; }
+  }
 
 </style>
 </head>
@@ -1588,64 +1613,69 @@ render();
 
 <!-- EDIT ITEM MODAL -->
 <div class="edit-modal-overlay" id="edit-modal-overlay">
-  <div class="add-modal" style="position:relative;">
-    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px;">
-      <span style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--ink);">Edit Item</span>
+  <div class="add-modal">
+    <div class="em-header">
+      <span class="em-title">Edit Item</span>
       <span class="edit-id" id="edit-modal-id"></span>
     </div>
-
-    <div class="add-modal-section">
-      <label>Photo</label>
-      <div class="edit-photo-area" id="edit-photo-area">
-        <input type="file" id="edit-photo-input" accept="image/*">
-        <div class="edit-photo-placeholder" id="edit-photo-placeholder">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M3 9l4-4 3 3 4-4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-          Click or drag to replace photo
+    <div class="modal-inner">
+      <!-- LEFT: photo -->
+      <div class="modal-photo-col">
+        <span class="modal-photo-label">Photo</span>
+        <div class="edit-photo-area" id="edit-photo-area">
+          <input type="file" id="edit-photo-input" accept="image/*">
+          <div class="edit-photo-placeholder" id="edit-photo-placeholder">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M3 9l4-4 3 3 4-4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            Click or drag to replace photo
+          </div>
+          <img id="edit-photo-preview" class="edit-photo-preview" style="display:none">
+          <div class="modal-photo-hover"><span>Replace photo</span></div>
         </div>
-        <img id="edit-photo-preview" class="edit-photo-preview" style="display:none">
       </div>
-    </div>
-
-    <div class="add-modal-section">
-      <label>Name / Visual Description</label>
-      <textarea id="edit-name" rows="1" placeholder="e.g. Solid Navy Linen Apron, Crossback Straps, Two Patch Pockets"></textarea>
-    </div>
-
-    <div class="add-modal-section">
-      <label>Color</label>
-      <select id="edit-color">
-        <option value="Blue">Blue</option>
-        <option value="Yellow">Yellow</option>
-        <option value="Red">Red</option>
-        <option value="Pink">Pink</option>
-        <option value="Green">Green</option>
-        <option value="Gray">Gray</option>
-        <option value="Black">Black</option>
-        <option value="Beige/Brown">Beige / Brown</option>
-      </select>
-    </div>
-
-    <div class="modal-qty-notes-row" style="grid-template-columns:1fr 1fr 6fr;">
-      <div class="add-modal-section modal-qty-field">
-        <label>Qty</label>
-        <input type="number" id="edit-qty" placeholder="1" step="1" min="1" value="1">
-      </div>
-      <label class="broken-check-wrap">
-        <span class="broken-field-label">Archive</span>
-        <input type="checkbox" id="edit-archive" class="broken-check-input">
-        <div class="broken-check-box">
-          <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="3" x2="13" y2="13"/><line x1="13" y1="3" x2="3" y2="13"/></svg>
+      <!-- RIGHT: fields -->
+      <div class="modal-fields-col">
+        <div class="mf">
+          <label>Name / Visual Description</label>
+          <textarea id="edit-name" rows="1" placeholder="e.g. Solid Navy Linen Apron, Crossback Straps, Two Patch Pockets"></textarea>
         </div>
-      </label>
-      <div class="add-modal-section modal-notes-field">
-        <label>Notes</label>
-        <input type="text" id="edit-notes" placeholder="e.g. Fragile, handle with care">
-      </div>
-    </div>
 
-    <div class="add-modal-footer">
-      <button class="add-cancel-btn" onclick="closeEditModal()">Cancel</button>
-      <button class="add-confirm-btn" onclick="saveAndExport()">Save Changes</button>
+        <div class="mf">
+          <label>Color</label>
+          <select id="edit-color">
+            <option value="Blue">Blue</option>
+            <option value="Yellow">Yellow</option>
+            <option value="Red">Red</option>
+            <option value="Pink">Pink</option>
+            <option value="Green">Green</option>
+            <option value="Gray">Gray</option>
+            <option value="Black">Black</option>
+            <option value="Beige/Brown">Beige / Brown</option>
+          </select>
+        </div>
+
+        <div class="em-row3">
+          <div class="mf">
+            <label>Qty</label>
+            <input type="number" id="edit-qty" placeholder="1" step="1" min="1" value="1">
+          </div>
+          <label class="broken-check-wrap">
+            <span class="broken-field-label">Archive</span>
+            <input type="checkbox" id="edit-archive" class="broken-check-input">
+            <div class="broken-check-box">
+              <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="3" x2="13" y2="13"/><line x1="13" y1="3" x2="3" y2="13"/></svg>
+            </div>
+          </label>
+          <div class="mf">
+            <label>Notes</label>
+            <input type="text" id="edit-notes" placeholder="e.g. Fragile, handle with care">
+          </div>
+        </div>
+
+        <div class="add-modal-footer">
+          <button class="add-cancel-btn" onclick="closeEditModal()">Cancel</button>
+          <button class="add-confirm-btn" onclick="saveAndExport()">Save Changes</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1653,63 +1683,68 @@ render();
 <!-- ADD ITEM MODAL -->
 <div class="add-modal-overlay" id="add-modal-overlay">
   <div class="add-modal">
-    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px;">
-      <h3 style="margin:0;padding:0;">Add New Item</h3>
-      <span id="add-generated-id" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--ink-soft);letter-spacing:0.08em;text-transform:uppercase;"></span>
+    <div class="em-header">
+      <span class="em-title">Add New Item</span>
+      <span id="add-generated-id" class="add-generated-id"></span>
     </div>
-
-    <div class="add-modal-section">
-      <label>Photo</label>
-      <div class="add-photo-area" id="add-photo-area">
-        <input type="file" id="add-photo-input" accept="image/*">
-        <div class="add-photo-placeholder" id="add-photo-placeholder">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M3 9l4-4 3 3 4-4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-          Click or drag to upload photo
+    <div class="modal-inner">
+      <!-- LEFT: photo -->
+      <div class="modal-photo-col">
+        <span class="modal-photo-label">Photo</span>
+        <div class="add-photo-area" id="add-photo-area">
+          <input type="file" id="add-photo-input" accept="image/*">
+          <div class="add-photo-placeholder" id="add-photo-placeholder">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M3 9l4-4 3 3 4-4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            Click or drag to upload photo
+          </div>
+          <img id="add-photo-preview" class="add-photo-preview" style="display:none">
+          <div class="modal-photo-hover"><span>Replace photo</span></div>
         </div>
-        <img id="add-photo-preview" class="add-photo-preview" style="display:none">
       </div>
-    </div>
-
-    <div class="add-modal-section">
-      <label>Name / Visual Description</label>
-      <textarea id="add-name" rows="1" placeholder="e.g. Solid Navy Linen Apron, Crossback Straps, Two Patch Pockets"></textarea>
-    </div>
-
-    <div class="add-modal-section">
-      <label>Color</label>
-      <select id="add-color">
-        <option value="Blue">Blue</option>
-        <option value="Yellow">Yellow</option>
-        <option value="Red">Red</option>
-        <option value="Pink">Pink</option>
-        <option value="Green">Green</option>
-        <option value="Gray">Gray</option>
-        <option value="Black">Black</option>
-        <option value="Beige/Brown">Beige / Brown</option>
-      </select>
-    </div>
-
-    <div class="modal-qty-notes-row">
-      <div class="add-modal-section modal-qty-field">
-        <label>Qty</label>
-        <input type="number" id="add-qty" placeholder="1" step="1" min="1" value="1">
-      </div>
-      <label class="broken-check-wrap">
-        <span class="broken-field-label">Archive</span>
-        <input type="checkbox" id="add-archive" class="broken-check-input">
-        <div class="broken-check-box">
-          <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="3" x2="13" y2="13"/><line x1="13" y1="3" x2="3" y2="13"/></svg>
+      <!-- RIGHT: fields -->
+      <div class="modal-fields-col">
+        <div class="mf">
+          <label>Name / Visual Description</label>
+          <textarea id="add-name" rows="1" placeholder="e.g. Solid Navy Linen Apron, Crossback Straps, Two Patch Pockets"></textarea>
         </div>
-      </label>
-      <div class="add-modal-section modal-notes-field">
-        <label>Notes</label>
-        <input type="text" id="add-notes" placeholder="e.g. Fragile, handle with care">
-      </div>
-    </div>
 
-    <div class="add-modal-footer">
-      <button class="add-cancel-btn" id="add-cancel-btn" onclick="closeAddModal()">Cancel</button>
-      <button class="add-confirm-btn" id="add-confirm-btn" onclick="addToCatalog()">Add to Catalog</button>
+        <div class="mf">
+          <label>Color</label>
+          <select id="add-color">
+            <option value="Blue">Blue</option>
+            <option value="Yellow">Yellow</option>
+            <option value="Red">Red</option>
+            <option value="Pink">Pink</option>
+            <option value="Green">Green</option>
+            <option value="Gray">Gray</option>
+            <option value="Black">Black</option>
+            <option value="Beige/Brown">Beige / Brown</option>
+          </select>
+        </div>
+
+        <div class="em-row3">
+          <div class="mf">
+            <label>Qty</label>
+            <input type="number" id="add-qty" placeholder="1" step="1" min="1" value="1">
+          </div>
+          <label class="broken-check-wrap">
+            <span class="broken-field-label">Archive</span>
+            <input type="checkbox" id="add-archive" class="broken-check-input">
+            <div class="broken-check-box">
+              <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="3" x2="13" y2="13"/><line x1="13" y1="3" x2="3" y2="13"/></svg>
+            </div>
+          </label>
+          <div class="mf">
+            <label>Notes</label>
+            <input type="text" id="add-notes" placeholder="e.g. Fragile, handle with care">
+          </div>
+        </div>
+
+        <div class="add-modal-footer">
+          <button class="add-cancel-btn" id="add-cancel-btn" onclick="closeAddModal()">Cancel</button>
+          <button class="add-confirm-btn" id="add-confirm-btn" onclick="addToCatalog()">Add to Catalog</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
